@@ -49,11 +49,13 @@ const onSubmit = async () => {
         <form @submit.prevent="onSubmit">
             <label for="title">Titre</label>
             <input
+                id="title"
                 placeholder="Quel est le nom de mon œuvre"
                 v-model="form.title"
             />
             <label for="body">Message</label>
             <textarea
+                id="body"
                 v-model="form.body"
                 placeholder="Quel est ton message au monde"
             ></textarea>

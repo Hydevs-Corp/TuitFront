@@ -4,10 +4,13 @@ import Post from "./Post.vue";
 import { post } from "../types/post";
 import Container from "./layout/Container.vue";
 import CreateButton from "./CreateButton.vue";
+import { useAuthStore } from "../store";
 
 const posts = ref<post[]>([]);
 const skip = ref<number>(0);
 const total = ref<number>(0);
+
+const store = useAuthStore();
 
 const fetchNext = async () => {
     try {
@@ -37,7 +40,7 @@ fetchNext();
                     Voir plus
                 </button>
             </div>
-            <CreateButton />
+            <CreateButton v-if="!!store.userData._id" />
         </div>
     </Container>
 </template>

@@ -20,6 +20,7 @@ store.updateUser();
 <style scoped>
 img {
     width: 128px;
+    pointer-events: none;
     /* height: auto; */
     position: fixed;
     bottom: 0;

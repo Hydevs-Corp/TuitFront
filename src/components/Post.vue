@@ -13,7 +13,7 @@ const props = defineProps<{
 const author = ref<user>();
 const post = ref<post>(props.post);
 
-const { userData } = useAuthStore();
+const store = useAuthStore();
 
 fetch("/api/user/" + props.post.userId)
     .then((response) => {
@@ -45,7 +45,7 @@ const formatDateTime = (date: string) => {
     return `${formatTime().minutes - formatTime(date).minutes}min`;
 };
 
-const isLiked = ref<boolean>(post.value.likes?.includes(userData.email));
+const isLiked = ref<boolean>(post.value.likes?.includes(store.userData.email));
 
 const toggleLike = (e: MouseEvent) => {
     e.stopPropagation();
@@ -55,16 +55,20 @@ const toggleLike = (e: MouseEvent) => {
         .then((response) => response.json())
         .then((data) => {
             isLiked.value = data.liked;
-            if (data.liked) post.value.likes.push(userData.email);
+            if (data.liked) post.value.likes.push(store.userData.email);
             else {
                 post.value.likes = post.value.likes.filter(
-                    (email) => email !== userData.email
+                    (email) => email !== store.userData.email
                 );
             }
         });
 };
 
 const router = useRouter();
+
+const isConnected = () => !!store.userData._id;
+
+console.log("liurhbf;eg", author);
 </script>
 <template>
     <div @click="router.push('/post/' + post._id)" class="post">
@@ -90,10 +94,20 @@ const router = useRouter();
                 <button
                     :class="`${isLiked ? 'liked' : ''} like`"
                     @click="toggleLike"
+                    id="likeButton"
+                    v-if="isConnected()"
                 >
+                    >
                     <img :src="heart" alt="like" v-if="!isLiked" />
                     <img :src="heartFilled" alt="like" v-if="isLiked" />
                 </button>
+                <RouterLink
+                    id="likeButton"
+                    to="/api/auth/signin"
+                    v-if="!isConnected()"
+                >
+                    <img :src="heart" alt="like" />
+                </RouterLink>
             </div>
         </div>
     </div>
@@ -143,6 +157,10 @@ const router = useRouter();
     width: 100%;
     height: 100%;
 }
+/* .buttons img {
+    width: 100%;
+    height: 100%;
+} */
 /* .like >  */
 .liked {
     background-color: transparent;

@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import write from "../assets/edit.png";
+
+import { useAuthStore } from "../store";
+const store = useAuthStore();
+const isConnected = () => !!store.userData._id;
 </script>
 
 <template>
-    <RouterLink class="createButton" to="/post/create">
+    <RouterLink class="createButton" to="/post/create" v-if="isConnected()">
         <img :src="write" />
     </RouterLink>
 </template>
@@ -26,6 +30,7 @@ import write from "../assets/edit.png";
     color: white;
     text-decoration: none;
     margin-right: 20px;
+    z-index: 10000;
 }
 
 .createButton img {

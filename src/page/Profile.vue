@@ -12,7 +12,7 @@ console.log("coucou");
     <Container class="profile">
         <div class="header">
             <h1>Profile</h1>
-            <button @click="authStore.logout">Logout</button>
+            <a href="/api/auth/signout">Logout</a>
         </div>
         <pre>{{ JSON.stringify(authStore.userData, null, 4) }}</pre>
         <p>

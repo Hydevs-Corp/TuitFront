@@ -12,17 +12,27 @@ import tuit_logo from "../../assets/tuit_logo.png";
         <div class="left">
             <img :src="tuit_logo" />
             <div class="routerLink">
-                <RouterLink to="/">Home</RouterLink>
-                <!-- <RouterLink to="/post/create">Poster</RouterLink> -->
-                <RouterLink to="/liked">Liked</RouterLink>
+                <RouterLink id="homeLink" to="/">Home</RouterLink>
+
+                <RouterLink id="likeLink" to="/liked" v-if="isConnected()"
+                    >Liked</RouterLink
+                >
             </div>
         </div>
-        <a href="/api/auth/signin" class="login" v-if="!isConnected()">Login</a>
-        <div v-if="isConnected()">
-            <RouterLink to="/profile" class="profile">
-                <img :src="store.userData.image" />
-                <span>{{ store.userData.name || store.userData.email }}</span>
-            </RouterLink>
+        <div>
+            <div v-if="!isConnected()" class="unsignedContainer">
+                <a href="/api/auth/signin" class="unsigned">Login</a>
+                <!-- <a href="/api/auth/callback" class="unsigned">Sign up</a> -->
+            </div>
+            <div v-if="isConnected()" class="profileContainer">
+                <RouterLink to="/profile" class="profile">
+                    <img :src="store.userData.image" />
+                    <span>{{
+                        store.userData.name || store.userData.email
+                    }}</span>
+                </RouterLink>
+                <a href="/api/auth/signout" class="signout">Signout</a>
+            </div>
         </div>
     </nav>
 </template>
@@ -32,19 +42,32 @@ import tuit_logo from "../../assets/tuit_logo.png";
     display: flex;
     gap: 5px;
 }
+.profileContainer {
+    display: flex;
+    gap: 10px;
+}
 .profile {
     display: flex;
     align-items: center;
     gap: 5px;
     color: #fff;
     text-decoration: none;
+    flex-direction: row;
+    /* min-width: fit-content; */
+    /* width: 300px; */
 }
 .profile img {
-    width: 30px;
-    height: 30px;
+    /* background-color: #fffb; */
+    padding: 4px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
 }
-.login {
+.unsignedContainer {
+    display: flex;
+    gap: 10px;
+}
+.unsigned {
     background-color: #3333;
     padding: 5px 10px;
     border-radius: 5px;

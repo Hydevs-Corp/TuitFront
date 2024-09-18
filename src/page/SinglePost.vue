@@ -5,6 +5,8 @@ import type { post } from "../types/post";
 import { useAuthStore } from "../store";
 import { useRouter } from "vue-router";
 import Comment from "../components/Comment.vue";
+// import { useAuthStore } from "../../store";
+// const store = useAuthStore();
 const { id } = defineProps<{ id: string }>();
 
 const post = ref<Partial<post>>({
@@ -13,6 +15,7 @@ const post = ref<Partial<post>>({
 const comment = ref<string>("");
 const store = useAuthStore();
 const router = useRouter();
+const isConnected = () => !!store.userData._id;
 
 const fetchPost = async () => {
     const response = await fetch(`/api/posts/${id}`);
@@ -60,6 +63,7 @@ const deletePost = async () => {
             <h1>{{ post.title }}</h1>
             <p>{{ post.body }}</p>
             <button
+                id="delete"
                 v-if="store.userData._id === post.userId"
                 @click="deletePost"
             >
@@ -68,9 +72,13 @@ const deletePost = async () => {
         </div>
         <div>
             <h2>Commentaires</h2>
-            <form class="new-comment" @submit.prevent="pushComment">
-                <input required minlength="5" v-model="comment" />
-                <button>Envoyer</button>
+            <form
+                class="new-comment"
+                @submit.prevent="pushComment"
+                v-if="isConnected()"
+            >
+                <input id="comment" required minlength="5" v-model="comment" />
+                <button id="submit-comment">Envoyer</button>
             </form>
             <div v-if="post?.comments?.length ?? 0 > 0" class="comment-list">
                 <Comment

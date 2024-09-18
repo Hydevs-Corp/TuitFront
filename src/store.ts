@@ -18,19 +18,5 @@ export const useAuthStore = defineStore("auth", {
                 this.userData = (await response.json()) as user;
             }
         },
-        async logout() {
-            const response = await fetch("/api/logout", {
-                method: "POST",
-            });
-            if (response.ok) {
-                this.userData = {
-                    _id: "",
-                    name: "",
-                    email: "",
-                    image: "",
-                    emailVerified: false,
-                };
-            }
-        },
     },
 });

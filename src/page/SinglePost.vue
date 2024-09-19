@@ -5,8 +5,6 @@ import type { post } from "../types/post";
 import { useAuthStore } from "../store";
 import { useRouter } from "vue-router";
 import Comment from "../components/Comment.vue";
-// import { useAuthStore } from "../../store";
-// const store = useAuthStore();
 const { id } = defineProps<{ id: string }>();
 
 const post = ref<Partial<post>>({
@@ -15,7 +13,7 @@ const post = ref<Partial<post>>({
 const comment = ref<string>("");
 const store = useAuthStore();
 const router = useRouter();
-const isConnected = () => !!store.userData._id;
+const isConnected = () => !!store.authData._id;
 
 const fetchPost = async () => {
     const response = await fetch(`/api/posts/${id}`);
@@ -35,19 +33,17 @@ const pushComment = async () => {
         },
         body: JSON.stringify({
             body: comment.value,
-            author: store.userData._id ?? "anonymous",
+            author: store.authData._id ?? "anonymous",
         }),
     });
     if (response.ok) {
         comment.value = "";
         const newPost = await response.json();
-        console.log(newPost);
         post.value = newPost;
     }
 };
 
 const deletePost = async () => {
-    console.log(`/api/posts/${id}`);
     const response = await fetch(`/api/posts/${id}`, {
         method: "DELETE",
     });
@@ -64,7 +60,7 @@ const deletePost = async () => {
             <p>{{ post.body }}</p>
             <button
                 id="delete"
-                v-if="store.userData._id === post.userId"
+                v-if="store.authData._id === post.userId"
                 @click="deletePost"
             >
                 Supprimer le post

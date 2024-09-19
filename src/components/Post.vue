@@ -6,6 +6,7 @@ import heartFilled from "../assets/heart_filled.png";
 import comment from "../assets/comment.png";
 import { useAuthStore } from "../store";
 import type { post, user } from "../types/post";
+import { getTimeDifference } from "../scripts/getTimeDifference";
 const props = defineProps<{
     post: post;
 }>();
@@ -14,61 +15,49 @@ const author = ref<user>();
 const post = ref<post>(props.post);
 
 const store = useAuthStore();
-
-fetch("/api/user/" + props.post.userId)
-    .then((response) => {
-        return response.json();
-    })
-    .then((data) => {
-        author.value = data;
-    });
-
-const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString();
-};
-const formatTime = (date: string | number = Date.now()) => {
-    return {
-        hours: new Date(date).getHours(),
-        minutes: new Date(date).getMinutes(),
-    };
-};
-const isMoreThan = (_date: string) => {
-    return {
-        day: new Date().getDate() !== new Date(_date).getDate(),
-        hour: new Date().getHours() !== new Date(_date).getHours(),
-    };
-};
-const formatDateTime = (date: string) => {
-    if (isMoreThan(date).day) return `${formatDate(date)}`;
-    if (isMoreThan(date).hour)
-        return `${formatTime().hours - formatTime(date).hours}h`;
-    return `${formatTime().minutes - formatTime(date).minutes}min`;
-};
-
-const isLiked = ref<boolean>(post.value.likes?.includes(store.userData.email));
-
-const toggleLike = (e: MouseEvent) => {
-    e.stopPropagation();
-    fetch("/api/posts/" + post.value._id + "/togglelike", {
-        method: "POST",
-    })
-        .then((response) => response.json())
-        .then((data) => {
-            isLiked.value = data.liked;
-            if (data.liked) post.value.likes.push(store.userData.email);
-            else {
-                post.value.likes = post.value.likes.filter(
-                    (email) => email !== store.userData.email
-                );
-            }
-        });
-};
-
 const router = useRouter();
 
-const isConnected = () => !!store.userData._id;
+const fetchAuthor = async () => {
+    try {
+        const response = await fetch("/api/user/" + props.post.userId);
+        const data = await response.json();
+        author.value = data;
+    } catch (error) {
+        console.error("Error fetching author:", error);
+    }
+};
 
-console.log("liurhbf;eg", author);
+fetchAuthor();
+
+const isLiked = ref<boolean>(post.value.likes?.includes(store.authData.email));
+
+const toggleLike = async (e: MouseEvent) => {
+    e.stopPropagation();
+    try {
+        const response = await fetch(
+            "/api/posts/" + post.value._id + "/togglelike",
+            {
+                method: "POST",
+            }
+        );
+        const data = await response.json();
+        isLiked.value = data.liked;
+        if (data.liked) {
+            post.value.likes.push(store.authData.email);
+        } else {
+            post.value.likes = post.value.likes.filter(
+                (email) => email !== store.authData.email
+            );
+        }
+    } catch (error) {
+        console.error("Error toggling like:", error);
+    }
+};
+
+const goToSignUp = (e: MouseEvent) => {
+    e.stopPropagation();
+    router.push("/api/auth/signin");
+};
 </script>
 <template>
     <div @click="router.push('/post/' + post._id)" class="post">
@@ -78,8 +67,7 @@ console.log("liurhbf;eg", author);
                 <p>{{ author?.name }}</p>
             </div>
             <div class="timestamp">
-                {{ formatDateTime(post.createdAt) }}
-                <!-- {{ new Date(post.createdAt).toLocaleTimeString() }} -->
+                {{ getTimeDifference(post.createdAt) }}
             </div>
         </div>
         <p class="title">{{ post.title }}</p>
@@ -95,19 +83,19 @@ console.log("liurhbf;eg", author);
                     :class="`${isLiked ? 'liked' : ''} like`"
                     @click="toggleLike"
                     id="likeButton"
-                    v-if="isConnected()"
+                    v-if="store.connected"
                 >
-                    >
                     <img :src="heart" alt="like" v-if="!isLiked" />
                     <img :src="heartFilled" alt="like" v-if="isLiked" />
                 </button>
-                <RouterLink
+                <button
+                    class="like"
+                    @click="goToSignUp"
                     id="likeButton"
-                    to="/api/auth/signin"
-                    v-if="!isConnected()"
+                    v-if="!store.connected"
                 >
                     <img :src="heart" alt="like" />
-                </RouterLink>
+                </button>
             </div>
         </div>
     </div>

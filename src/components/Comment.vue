@@ -7,14 +7,6 @@ const { comment } = defineProps<{ comment: comment }>();
 const author = ref<user>();
 
 const getUser = async () => {
-    console.log(comment.author);
-    if (comment.author === "anonymous" || !comment.author)
-        return (author.value = {
-            name: "Anonymous",
-            image: "/placeholder.png",
-            _id: "anonymous",
-            email: "anonymous",
-        });
     const response = await fetch(`/api/user/${comment.author}`);
     const data = await response.json();
     author.value = data;

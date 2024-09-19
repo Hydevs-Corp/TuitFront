@@ -3,7 +3,7 @@ import { user } from "./types/post";
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
-        userData: {
+        authData: {
             _id: "",
             name: "",
             email: "",
@@ -11,12 +11,25 @@ export const useAuthStore = defineStore("auth", {
             emailVerified: false,
         } as user,
     }),
+    getters: {
+        connected(): boolean {
+            return this.authData.email !== "";
+        },
+        userData(): user {
+            return this.authData ?? {};
+        },
+    },
     actions: {
-        async updateUser() {
+        async getUser() {
             const response = await fetch("/api/whoami");
             if (response.ok) {
-                this.userData = (await response.json()) as user;
+                const userData = (await response.json()) as user;
+                console.log(userData);
+                this.authData = userData;
             }
+        },
+        setUser(userData: user) {
+            this.authData = userData;
         },
     },
 });

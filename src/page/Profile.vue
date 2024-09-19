@@ -3,29 +3,16 @@ import Container from "../components/layout/Container.vue";
 import { useAuthStore } from "../store";
 
 const authStore = useAuthStore();
-// authStore.logout;
-
-console.log("coucou");
 </script>
 
 <template>
     <Container class="profile">
         <div class="header">
-            <h1>Profile</h1>
-            <a href="/api/auth/signout">Logout</a>
+            <h1>Profil</h1>
+            <a href="/api/auth/signout">Se déconnecter</a>
         </div>
-        <pre>{{ JSON.stringify(authStore.userData, null, 4) }}</pre>
-        <p>
-            <span class="id">
-                <strong>ID:</strong> {{ authStore.userData._id }}
-            </span>
-            <span>
-                <strong>Username:</strong> {{ authStore.userData.name }}
-            </span>
-            <span>
-                <strong>Email:</strong> {{ authStore.userData.email }}
-            </span>
-        </p>
+        <p><strong>Username:</strong> {{ authStore.authData.name }}</p>
+        <p><strong>Email:</strong> {{ authStore.authData.email }}</p>
     </Container>
 </template>
 
@@ -38,7 +25,6 @@ console.log("coucou");
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: red;
 }
 .id {
     color: #666;

@@ -6,27 +6,44 @@ import chaton from "./assets/Chaton.png";
 
 const store = useAuthStore();
 
-store.updateUser();
+store.getUser();
 </script>
 
 <template>
     <Navbar />
     <main>
         <RouterView />
-        <img :src="chaton" />
+        <div class="cat"><img :src="chaton" /></div>
     </main>
 </template>
 
 <style scoped>
-img {
-    width: 128px;
+.cat {
+    height: 100px;
     pointer-events: none;
-    /* height: auto; */
     position: fixed;
     bottom: 0;
-    right: 0;
     z-index: 10;
-    /* opacity: 0.5; */
     cursor: grab;
+}
+
+.cat img {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    position: relative;
+}
+
+.cat::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 150px;
+    height: 100px;
+    background: white;
+    border-top-right-radius: 100%;
+    filter: blur(10px);
+    z-index: 0;
 }
 </style>

@@ -32,7 +32,7 @@ const onSubmit = async () => {
         },
         body: JSON.stringify({
             ...form.value,
-            userId: store.userData._id,
+            userId: store.authData._id,
             comments: [],
             likes: [],
         }),

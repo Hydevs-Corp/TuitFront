@@ -4,11 +4,10 @@ import write from "../assets/edit.png";
 
 import { useAuthStore } from "../store";
 const store = useAuthStore();
-const isConnected = () => !!store.userData._id;
 </script>
 
 <template>
-    <RouterLink class="createButton" to="/post/create" v-if="isConnected()">
+    <RouterLink class="createButton" to="/post/create" v-if="store.connected">
         <img :src="write" />
     </RouterLink>
 </template>

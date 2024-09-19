@@ -9,19 +9,17 @@ const posts = ref<post[]>([]);
 const skip = ref<number>(0);
 const total = ref<number>(0);
 
-const fetchNext = () => {
-    fetch("/api/liked?limit=10&skip=" + skip.value)
-        .then((response) => {
-            return response.json();
-        })
-        .then((data) => {
-            console.log(posts.value);
-            posts.value = [...posts.value, ...data?.posts];
-            total.value = data.total;
-        });
-    skip.value += 1;
+const fetchNext = async () => {
+    try {
+        const response = await fetch("/api/liked?limit=10&skip=" + skip.value);
+        const data = await response.json();
+        posts.value = [...posts.value, ...data?.posts];
+        total.value = data.total;
+        skip.value += 1;
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+    }
 };
-
 fetchNext();
 </script>
 

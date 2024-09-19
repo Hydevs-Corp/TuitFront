@@ -40,7 +40,7 @@ fetchNext();
                     Voir plus
                 </button>
             </div>
-            <CreateButton v-if="!!store.userData._id" />
+            <CreateButton v-if="!!store.authData._id" />
         </div>
     </Container>
 </template>

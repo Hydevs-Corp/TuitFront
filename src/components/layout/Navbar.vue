@@ -2,8 +2,6 @@
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "../../store";
 const store = useAuthStore();
-const isConnected = () => !!store.userData._id;
-// console.log("kijehroivljeirvhu", JSON.stringify(store.userData));
 import tuit_logo from "../../assets/tuit_logo.png";
 </script>
 
@@ -12,26 +10,21 @@ import tuit_logo from "../../assets/tuit_logo.png";
         <div class="left">
             <img :src="tuit_logo" />
             <div class="routerLink">
-                <RouterLink id="homeLink" to="/">Home</RouterLink>
+                <RouterLink id="homeLink" to="/">Accueil</RouterLink>
 
-                <RouterLink id="likeLink" to="/liked" v-if="isConnected()"
-                    >Liked</RouterLink
+                <RouterLink id="likeLink" to="/liked" v-if="store.connected"
+                    >Mes posts préférés</RouterLink
                 >
             </div>
         </div>
         <div>
-            <div v-if="!isConnected()" class="unsignedContainer">
+            <div v-if="!store.connected" class="unsignedContainer">
                 <a href="/api/auth/signin" class="unsigned">Login</a>
-                <!-- <a href="/api/auth/callback" class="unsigned">Sign up</a> -->
             </div>
-            <div v-if="isConnected()" class="profileContainer">
+            <div v-if="store.connected" class="profileContainer">
                 <RouterLink to="/profile" class="profile">
-                    <img :src="store.userData.image" />
-                    <span>{{
-                        store.userData.name || store.userData.email
-                    }}</span>
+                    <img :src="store.authData.image" />
                 </RouterLink>
-                <a href="/api/auth/signout" class="signout">Signout</a>
             </div>
         </div>
     </nav>
@@ -40,6 +33,10 @@ import tuit_logo from "../../assets/tuit_logo.png";
 <style scoped>
 .routerLink {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
     gap: 5px;
 }
 .profileContainer {
@@ -53,12 +50,11 @@ import tuit_logo from "../../assets/tuit_logo.png";
     color: #fff;
     text-decoration: none;
     flex-direction: row;
-    /* min-width: fit-content; */
-    /* width: 300px; */
+    padding: 0;
 }
 .profile img {
     /* background-color: #fffb; */
-    padding: 4px;
+    /* padding: 4px; */
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -83,15 +79,14 @@ img {
     height: 50px;
 }
 nav {
+    gap: 5px;
     padding: 10px;
     box-sizing: border-box;
-    width: 95%;
     margin: 0 auto;
-    border-radius: 0 0 5px 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--pink-pastel);
+    background-color: var(--pink);
 }
 h1 {
     margin: 0;

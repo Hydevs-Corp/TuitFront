@@ -20,6 +20,7 @@ Projet niveau 1 & 2 pour le cours de RenforcementJS
 -   Les tests sont lancés dans une pipeline ✅
 -   Les fonctionnalités du projet sont abouties ✅
 
-[Back]
-(https://github.com/Hydevs-Corp/TuitBack)
-[Docker](https://github.com/Hydevs-Corp/TuitCompose.git)
+### Autres parties du projet :
+
+-   [Back](https://github.com/Hydevs-Corp/TuitBack)
+-   [Docker](https://github.com/Hydevs-Corp/TuitCompose.git)

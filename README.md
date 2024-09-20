@@ -24,3 +24,9 @@ Projet niveau 1 & 2 pour le cours de RenforcementJS
 
 -   [Back](https://github.com/Hydevs-Corp/TuitBack)
 -   [Docker](https://github.com/Hydevs-Corp/TuitCompose.git)
+
+### Tester le projet
+
+1. Build le projet dans le /public du backend
+2. Démarrer la base de donnée et le backen
+3. npm run test

@@ -16,9 +16,13 @@ const router = useRouter();
 const isConnected = () => !!store.authData._id;
 
 const fetchPost = async () => {
-    const response = await fetch(`/api/posts/${id}`);
-    const data = await response.json();
-    post.value = data;
+    try {
+        const response = await fetch(`/api/posts/${id}`);
+        const data = await response.json();
+        post.value = data;
+    } catch (error) {
+        router.push("/");
+    }
 };
 
 fetchPost();
@@ -55,17 +59,20 @@ const deletePost = async () => {
 
 <template>
     <Container>
-        <div>
-            <h1>{{ post.title }}</h1>
-            <p>{{ post.body }}</p>
-            <button
-                id="delete"
-                v-if="store.authData._id === post.userId"
-                @click="deletePost"
-            >
-                Supprimer le post
-            </button>
+        <div class="post-details">
+            <div>
+                <h1>{{ post.title }}</h1>
+                <p>{{ post.body }}</p>
+            </div>
         </div>
+        <button
+            class="button-delete"
+            id="delete"
+            v-if="store.authData._id === post.userId"
+            @click="deletePost"
+        >
+            Supprimer le post
+        </button>
         <div>
             <h2>Commentaires</h2>
             <form
@@ -73,8 +80,14 @@ const deletePost = async () => {
                 @submit.prevent="pushComment"
                 v-if="isConnected()"
             >
-                <input id="comment" required minlength="5" v-model="comment" />
-                <button id="submit-comment">Envoyer</button>
+                <input
+                    id="comment"
+                    class="add-comment"
+                    required
+                    minlength="5"
+                    v-model="comment"
+                />
+                <button id="submit-comment" class="button-send">Envoyer</button>
             </form>
             <div v-if="post?.comments?.length ?? 0 > 0" class="comment-list">
                 <Comment
@@ -98,11 +111,49 @@ const deletePost = async () => {
 .nothing {
     text-align: center;
 }
+h1 {
+    word-break: break-all;
+}
 p {
     word-break: break-all;
+    text-align: justify;
+}
+form {
+    margin: 10px auto;
 }
 form.new-comment {
     display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
     gap: 5px;
+}
+.add-comment {
+    max-width: 400px;
+    min-width: 300px;
+    border: 1px solid #ccc;
+}
+.post-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.button-delete {
+    height: 20%;
+    color: #ffffff;
+    background-color: var(--blue);
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+.button-send {
+    height: 20%;
+    color: #ffffff;
+    background-color: var(--blue);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
 }
 </style>

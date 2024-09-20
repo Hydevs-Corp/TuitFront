@@ -34,4 +34,11 @@ p {
     display: flex;
     justify-content: space-between;
 }
+a {
+    background-color: var(--blue);
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+    border-radius: 4px;
+}
 </style>

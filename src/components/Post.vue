@@ -158,6 +158,7 @@ const goToSignUp = (e: MouseEvent) => {
     font-size: 1.3rem;
     margin: 0;
     font-weight: bold;
+    word-break: break-all;
 }
 .body {
     font-size: 1rem;

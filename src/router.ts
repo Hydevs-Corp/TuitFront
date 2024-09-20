@@ -4,7 +4,6 @@ import HomeView from "./page/HomeView.vue";
 import Likes from "./page/Likes.vue";
 import PostForm from "./page/PostForm.vue";
 import Profile from "./page/Profile.vue";
-// import SignUp from "./page/SignUp.vue";
 import SinglePost from "./page/SinglePost.vue";
 
 const routes = [

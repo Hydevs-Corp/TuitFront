@@ -24,7 +24,6 @@ export const useAuthStore = defineStore("auth", {
             const response = await fetch("/api/whoami");
             if (response.ok) {
                 const userData = (await response.json()) as user;
-                console.log(userData);
                 this.authData = userData;
             }
         },
